@@ -64,18 +64,34 @@ bool  isRealwExp(const char *cadena) {
 	//cadena tiene que empezar con +,-,. o digito 0-9
 	//si cadena empieza con digito se descarta un comienzo 
 	//con punto o signo haci que pasa a verificar el resto de la cadena
-	if ((cadena[i] >= '0' && cadena[0] <= '9')) {
+	if ((cadena[i] >= '0' && cadena[i] <= '9')) {
 		valid = true;
 		i++;
 	}
-	else if (cadena[i] == '+' || cadena[i] == '-' || cadena[i] == '.')
+	else if (cadena[i] == '+' || cadena[i] == '-') {
 		if (strlen(cadena) > 1) {
 			valid = true;
-			if (cadena[i] == '.')
-				puntos++;
 			i++;
+			if (cadena[i] == '.') {
+				puntos++;
+				if (cadena[i + 1] == 'e' || strlen(cadena) == 2)
+					valid = false;
+				else
+					i++;
+			}
+			else if (cadena[i]<'0' || cadena[i]>'9')
+				valid = false;
 		}
-		
+	}
+	else if (cadena[i] == '.') {
+		if (strlen(cadena) > 1) {
+			valid = true;
+			i++;
+			puntos++;
+			if (cadena[i]<'0' || cadena[i]>'9')
+				valid = false;
+		}
+	}
 	//ciclo verifica que la cadena contenga solo digitos y la posibilidad de un punto decimal
 	//si se encuentra 'e' o 'E' se sale del ciclo para ejecutar otro procedimiento
 	for (i; cadena[i] != '\0' && valid && (puntos < 2); i++) {
@@ -97,14 +113,16 @@ bool  isRealwExp(const char *cadena) {
 		//cadena luego del exponente solo puede comenzar con signo o digito
 		if (!(cadena[i] == '+' || cadena[i] == '-' || (cadena[i] >= '0' && cadena[0] <= '9'))) {
 			valid = false;
-
 		}
 		i++;//se verifico una posicion haci que se incrementa
-
-		for (i; cadena[i] != '\0' && valid; i++) {
-			//resto de la cadena tiene que ser digitos
-			if (cadena[i]<'0' || cadena[i]>'9')
-				valid = false;
+		if ((cadena[i - 1] == '+' || cadena[i - 1] == '-') && cadena[i] == '\0')
+			valid = false;
+		else {
+			for (i; cadena[i] != '\0' && valid; i++) {
+				//resto de la cadena tiene que ser digitos
+				if (cadena[i]<'0' || cadena[i]>'9')
+					valid = false;
+			}
 		}
 	}
 	return valid;
@@ -114,7 +132,7 @@ bool isKeyWord(const char *cadena) {
 	MyString op;
 	op = cadena;
 	const int size = 5;
-	char* opList[size] = { "IF", "THEN", "READ", "PRINT",  "END"};
+	char* opList[size] = { "IF", "THEN", "READ", "PRINT",  "END" };
 	bool valid = false;
 	for (int i = 0; i < size; i++) {
 		if (op.toUpper() == opList[i])
@@ -124,8 +142,9 @@ bool isKeyWord(const char *cadena) {
 }
 
 bool isAssigment(const char *cadena) {
-	return MyString(cadena)== "=";
+	return MyString(cadena) == "=";
 }
+
 bool isRelationalOperator(const char *cadena) {
 	MyString op;
 	op = cadena;
@@ -150,20 +169,5 @@ bool isLogicalOperator(const char *cadena) {
 			valid = true;
 	}
 	return valid;
-}
-
-int main() {
-	char string[40];
-	int conitnuar = 1;
-	while (conitnuar == 1) {
-		cout << "cadena4: ";
-		cin >> string;
-		if (isAssigment(string))
-			cout << "valido" << endl;
-		else
-			cout << "invalido" << endl;
-		cout << "1 para continuar: ";
-		cin >> conitnuar;
-	}
 }
 

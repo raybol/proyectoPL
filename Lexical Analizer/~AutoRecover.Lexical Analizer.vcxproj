@@ -144,7 +144,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\CECS2223\Tipo\MyString.cpp" />
     <ClCompile Include="LexicalAnalizerFunctions.cpp" />
-    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\CECS2223\Tipo\MyString.h" />
