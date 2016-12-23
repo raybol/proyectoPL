@@ -21,6 +21,8 @@ bool  isInteger(const char *cadena) {
 		valid = true;
 	//resto de la cadena es solo digitos
 	//loop verifica esto
+	if (strlen(cadena) == 1)
+		valid = false;
 	for (int i = 1; cadena[i] != '\0' && valid; i++) {
 		if (cadena[i]<'0' || cadena[i]>'9')
 			valid = false;
@@ -29,7 +31,6 @@ bool  isInteger(const char *cadena) {
 }
 bool  isReal(const char *cadena) {
 	//verifica si es un numero real/ tiene punto decimal
-
 	bool valid = true;
 	//cotejo inicial
 	//cadea no puede ser solo +,- o .
@@ -131,8 +132,8 @@ bool  isRealwExp(const char *cadena) {
 bool isKeyWord(const char *cadena) {
 	MyString op;
 	op = cadena;
-	const int size = 5;
-	char* opList[size] = { "IF", "THEN", "READ", "PRINT",  "END" };
+	const int size = 6;
+	char* opList[size] = { "IF", "THEN", "READ", "PRINT",  "END.","REM" };
 	bool valid = false;
 	for (int i = 0; i < size; i++) {
 		if (op.toUpper() == opList[i])
@@ -141,7 +142,7 @@ bool isKeyWord(const char *cadena) {
 	return valid;
 }
 
-bool isAssigment(const char *cadena) {
+bool isAssignment(const char *cadena) {
 	return MyString(cadena) == "=";
 }
 
@@ -167,6 +168,40 @@ bool isLogicalOperator(const char *cadena) {
 	for (int i = 0; i < size; i++) {
 		if (op.toLower() == opList[i])
 			valid = true;
+	}
+	return valid;
+}
+bool isArithmeticOperator(const char *cadena) {
+	MyString op;
+	op = cadena;
+	const int size = 4;
+	char* opList[size] = { ".add.", ".sub.",".mul.",".div." };
+	bool valid = false;
+	for (int i = 0; i < size; i++) {
+		if (op.toLower() == opList[i])
+			valid = true;
+	}
+	return valid;
+}
+
+bool isVariable(const char *cadena)
+{
+	bool valid = true;
+	for (int i = 0; cadena[i] != '\0' && valid; i++)
+	{
+		if (!((cadena[i] >= 'A' && cadena[i] <= 'Z') || (cadena[i] >= 'a' && cadena[i] <= 'z')))
+			valid = false;
+	}
+	return valid;
+}
+
+bool isString(const char *cadena)
+{
+	bool valid = false;
+
+	if (cadena[0] == '"' && cadena[strlen(cadena) - 1] == '"')
+	{
+		valid = true;
 	}
 	return valid;
 }
