@@ -13,6 +13,4 @@ bool isRelationalOperator(const char *cadena);
 bool isLogicalOperator(const char *cadena);
 bool isVariable(const char *cadena);
 bool isString(const char *cadena);
-bool isComment(const char *cadena);
 bool isArithmeticOperator(const char *cadena);
-bool isEnd(const char *cadena);
