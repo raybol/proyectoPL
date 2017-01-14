@@ -52,7 +52,7 @@ bool  isReal(const char *cadena) {
 	return valid;
 }
 
-bool  isRealwExp(const char *cadena) {
+bool  isRealwExp(const MyString & cadena) {
 	//verifica si es un numero real que puede tener exponente
 	int i = 0;
 	int puntos = 0;
@@ -68,12 +68,12 @@ bool  isRealwExp(const char *cadena) {
 		i++;
 	}
 	else if (cadena[i] == '+' || cadena[i] == '-') {
-		if (strlen(cadena) > 1) {
+		if (cadena.len() > 1) {
 			valid = true;
 			i++;
 			if (cadena[i] == '.') {
 				puntos++;
-				if (cadena[i + 1] == 'e' || strlen(cadena) == 2)
+				if (cadena[i + 1] == 'e' || cadena.len() == 2)
 					valid = false;
 				else
 					i++;
@@ -83,7 +83,7 @@ bool  isRealwExp(const char *cadena) {
 		}
 	}
 	else if (cadena[i] == '.') {
-		if (strlen(cadena) > 1) {
+		if (cadena.len() > 1) {
 			valid = true;
 			i++;
 			puntos++;
@@ -182,7 +182,7 @@ bool isArithmeticOperator(const char *cadena) {
 	return valid;
 }
 
-bool isVariable(const char *cadena)
+bool isVariable(const MyString & cadena)
 {
 	bool valid = true;
 	for (int i = 0; cadena[i] != '\0' && valid; i++)
@@ -235,81 +235,125 @@ vector<MyString> tokenizer(const MyString & statement)
 	}
 	return tokens;
 }
-void validation() {
-	char string[40];
-	int conitnuar = 0;
 
-	while (conitnuar != 1) {
-		cout << "word: ";
-		cin >> string;
-		if (isKeyWord(string)) {
-			cout << "valid" << endl;
-			cout << "keyword" << endl << endl;
-		}
-		else if (isLogicalOperator(string))
-		{
-			cout << "valid" << endl;
-			cout << "logical operator" << endl << endl;
-		}
-		else if (isRelationalOperator(string))
-		{
-			cout << "valid" << endl;
-			cout << "relational operator" << endl << endl;
-		}
-		else if (isArithmeticOperator(string))
-		{
-			cout << "valid" << endl;
-			cout << "arithmetic operator" << endl << endl;
-		}
-		else if (isVariable(string))
-		{
-			cout << "valid" << endl;
-			if ((string[0] >= 'A' && string[0] <= 'F') || (string[0] >= 'a' && string[0] <= 'f'))
-				cout << "integer ";
-			else if ((string[0] >= 'G' && string[0] <= 'N') || (string[0] >= 'g' && string[0] <= 'n'))
-				cout << "real ";
-			else if ((string[0] >= 'O' && string[0] <= 'Z') || (string[0] >= 'o' && string[0] <= 'z'))
-				cout << "string ";
-			cout << "variable" << endl;
-			cout << endl;
-		}
-		else if (isAssignment(string))
-		{
-			cout << "valid" << endl;
-			cout << "assingment operator" << endl << endl;
-		}
-		else if (isUnsignedInteger(string))
-		{
-			cout << "valid" << endl;
-			cout << "unsigned integer" << endl << endl;
-		}
-		else if (isInteger(string))
-		{
-			cout << "valid" << endl;
-			cout << "integer" << endl << endl;
-		}
-		else if (isReal(string))
-		{
-			cout << "valid" << endl;
-			cout << "real number" << endl << endl;
-		}
+bool isExpression(const vector<MyString> & statement) {
+	bool twoParts = false;
+	int i;
+	MyString op;
+	vector<MyString>::const_iterator  it;
+	for (it = statement.begin(); it != statement.end() && it->toLower() != ".sub." && it->toLower() !=".add."; ++it) {}
+	if (it != statement.end()) {
+		op = statement[i];
+		vector<MyString> exp(statement.begin(), it);
+		vector<MyString> factor(it, statement.end());
+		isExpression(exp);
+		isFactor(factor);
+	}
+	else {
+		isFactor(statement);
+	}
+}
 
-		else if (isRealwExp(string))
-		{
-			cout << "valid" << endl;
-			cout << "real number with exponent" << endl << endl;
-		}
-		else if (isString(string))
-		{
-			cout << "valid" << endl;
-			cout << "string" << endl << endl;
-		}
-
-		else
-			cout << "not valid" << endl << endl;
-		cout << "1 to exist else to continue: ";
-		cin >> conitnuar;
+bool isFactor(const vector<MyString> & statement) {
+	MyString op;
+	vector<MyString>::const_iterator  it;
+	for (it = statement.begin(); it != statement.end() && it->toLower() != ".mul." && it->toLower() != ".div."; ++it) {}
+	if (it != statement.end()) {
+		op = it->toLower();
+		vector<MyString> factor(statement.begin(), it);
+		vector<MyString> term(it, statement.end());
+		
+		isFactor(factor);
+		isTerm(term);
+	}
+	else {
+		isTerm(statement);
 	}
 
 }
+
+bool isTerm(const vector<MyString> & statement) {
+	if (statement.size() > 1)
+		isExpression(statement);
+	else {		
+		return isRealwExp(statement[0])||isVariable(statement[0]);
+	}	
+}
+//void validation() {
+//	char string[40];
+//	int conitnuar = 0;
+//
+//	while (conitnuar != 1) {
+//		cout << "word: ";
+//		cin >> string;
+//		if (isKeyWord(string)) {
+//			cout << "valid" << endl;
+//			cout << "keyword" << endl << endl;
+//		}
+//		else if (isLogicalOperator(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "logical operator" << endl << endl;
+//		}
+//		else if (isRelationalOperator(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "relational operator" << endl << endl;
+//		}
+//		else if (isArithmeticOperator(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "arithmetic operator" << endl << endl;
+//		}
+//		else if (isVariable(string))
+//		{
+//			cout << "valid" << endl;
+//			if ((string[0] >= 'A' && string[0] <= 'F') || (string[0] >= 'a' && string[0] <= 'f'))
+//				cout << "integer ";
+//			else if ((string[0] >= 'G' && string[0] <= 'N') || (string[0] >= 'g' && string[0] <= 'n'))
+//				cout << "real ";
+//			else if ((string[0] >= 'O' && string[0] <= 'Z') || (string[0] >= 'o' && string[0] <= 'z'))
+//				cout << "string ";
+//			cout << "variable" << endl;
+//			cout << endl;
+//		}
+//		else if (isAssignment(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "assingment operator" << endl << endl;
+//		}
+//		else if (isUnsignedInteger(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "unsigned integer" << endl << endl;
+//		}
+//		else if (isInteger(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "integer" << endl << endl;
+//		}
+//		else if (isReal(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "real number" << endl << endl;
+//		}
+//
+//		else if (isRealwExp(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "real number with exponent" << endl << endl;
+//		}
+//		else if (isString(string))
+//		{
+//			cout << "valid" << endl;
+//			cout << "string" << endl << endl;
+//		}
+//
+//		else
+//			cout << "not valid" << endl << endl;
+//		cout << "1 to exist else to continue: ";
+//		cin >> conitnuar;
+//	}
+//
+//}
 
