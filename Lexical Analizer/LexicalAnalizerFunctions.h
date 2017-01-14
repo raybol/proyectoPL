@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include<string>
+#include<vector>
 #include"MyString.h"
 using namespace std;
 bool isUnsignedInteger(const char *cadena);
@@ -14,3 +15,4 @@ bool isLogicalOperator(const char *cadena);
 bool isVariable(const char *cadena);
 bool isString(const char *cadena);
 bool isArithmeticOperator(const char *cadena);
+vector<MyString> tokenizer(const MyString & statement);

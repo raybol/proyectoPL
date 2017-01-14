@@ -1,6 +1,7 @@
 
 #include<iostream>
 #include<string>
+#include<vector>
 #include"MyString.h"
 #include"LexicalAnalizerFunctions.h"
 using namespace std;
@@ -8,7 +9,19 @@ int main() {
 	double x = 4.e5;
 	char string[40];
 	int conitnuar = 0;
-	while (conitnuar != 1) {
+	vector<MyString> tokens;
+	MyString statement,temp;
+	cin >> statement;
+
+	tokens.push_back(statement);
+	tokens = tokenizer(statement);
+	for (int i = 0; i < tokens.size(); i++) {
+		cout << tokens[i] << endl;
+
+	}
+	
+
+	/*while (conitnuar != 1) {
 		cout << "word: ";
 		cin >> string;
 		if (isKeyWord(string)) {
@@ -78,5 +91,6 @@ int main() {
 			cout << "not valid" << endl << endl;
 		cout << "1 to exist else to continue: ";
 		cin >> conitnuar;
-	}
+	}*/
+	return 0;
 }

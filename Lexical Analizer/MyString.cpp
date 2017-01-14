@@ -60,7 +60,7 @@ MyString MyString::operator+(char ch) const
 	MyString r(*this);
 	if ((this->len() + 1) <= MAX) {
 		(r.s)[this->len()] = ch;
-		(r.s)[this->len()+1] = '0';
+		(r.s)[this->len()+1] = '\0';
 	}
 	return (r);
 }
@@ -342,7 +342,7 @@ bool operator<(const char * s, const MyString & aString)
 	return (strcmp(s,aString.s) < 0);
 }
 
-istream & operator>>(istream & in, MyString & aString)
+istream & operator >> (istream & in, MyString & aString)
 {
 	char ch;
 	aString = "";
