@@ -161,7 +161,7 @@ MyString MyString::toUpper() const
 
 MyString MyString::toLower() const
 {
-	return MyString(); MyString r(*this);
+	MyString r(*this);
 	for (int i = 0; i < this->len(); i++)
 		if ((this->s)[i] >= 'A' && (this->s)[i] <= 'Z')
 			(r.s)[i] = (this->s[i] + 32);

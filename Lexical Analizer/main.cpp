@@ -7,20 +7,20 @@
 using namespace std;
 int main() {
 	double x = 4.e5;
-	char string[40];
+
 	int conitnuar = 0;
 	vector<MyString> tokens;
 	
 	MyString statement,temp;
 	cin >> statement;
-
+	5 + 5/4;
 	tokens.push_back(statement);
 	tokens = tokenizer(statement);
-	vector<MyString> subtokens(tokens.begin()+2, tokens.end());
-	for (unsigned i = 0; i < subtokens.size(); i++) {
-		cout << subtokens[i] << endl;
 
-	}
+	if (validation(tokens))
+		cout << "good"<<endl;
+	else
+		cout << "bad" << endl;
 	
 
 	/*while (conitnuar != 1) {
