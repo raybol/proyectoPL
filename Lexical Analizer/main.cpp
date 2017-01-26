@@ -4,6 +4,7 @@
 #include<vector>
 #include"MyString.h"
 #include"LexicalAnalizerFunctions.h"
+#include"Parser.h"
 using namespace std;
 int main() {
 	double x = 4.e5;
@@ -16,12 +17,12 @@ int main() {
 	5 + 5/4;
 	tokens.push_back(statement);
 	tokens = tokenizer(statement);
-
-	if (validation(tokens))
+	2 > 3 <2;
+	4 && 5;
+	if (isPrintStatement(tokens))/*,0, int(tokens.size()-1)))*/
 		cout << "good"<<endl;
 	else
 		cout << "bad" << endl;
-	
 
 	/*while (conitnuar != 1) {
 		cout << "word: ";

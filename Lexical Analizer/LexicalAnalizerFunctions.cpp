@@ -142,6 +142,12 @@ bool isAssignment(const MyString & cadena) {
 	return MyString(cadena) == "=";
 }
 
+bool isOperator(const MyString & cadena) {
+	return isRelationalOperator(cadena) ||
+		isLogicalOperator(cadena) ||
+		isArithmeticOperator(cadena);
+}
+
 bool isRelationalOperator(const MyString & cadena) {
 	const int size = 6;
 	char* opList[size] = { ".gt.", ".lt." ,".eq." , ".ge." , ".le.", ".ne." };
@@ -219,6 +225,82 @@ bool isString(const MyString & cadena)
 	return valid;
 }
 
+bool isArithmeticExpression(const vector<MyString> & statement) {
+	vector<MyString>::const_iterator it = statement.begin() + 2;
+	int i = 0;
+
+	for (it; it != statement.end(); ++it, i++) {
+		if ((isUnsignedInteger(statement[i])) ||
+			(isInteger(statement[i])) ||
+			(isIntVariable(statement[i])) ||
+			(isReal(statement[i])) ||
+			(isRealwExp(statement[i])) ||
+			(isRealVariable(statement[i]))
+			) {
+			if (!(
+				(isLogicalOperator(statement[i + 1])) ||
+				(isRelationalOperator(statement[i + 1])) ||
+				(isArithmeticOperator(statement[i + 1]))
+				)
+				) {
+				cout << "error expected operator" << endl;
+				break;
+			}
+		}
+		else if ((isReal(statement[i])) ||
+			(isRealwExp(statement[i])) ||
+			isRealVariable(statement[i])) {
+			if (!(
+				(isLogicalOperator(statement[i + 1])) ||
+				(isRelationalOperator(statement[i + 1])) ||
+				(isArithmeticOperator(statement[i + 1]))
+				)
+				) {
+				cout << "error expected operator" << endl;
+				break;
+			}
+		}
+		else if (isStringVariable(statement[i]) ||
+			isString(statement[i])
+			) {
+		}
+		else if (isLogicalOperator(statement[i])) {}
+		else if (isRelationalOperator(statement[i])) {}
+		else if (isArithmeticOperator(statement[i])) {}
+
+
+
+
+		/*if (statement[i] == ".add." || statement[i].toLower() == ".sub.") {
+			break;
+		}*/
+	}
+	return true;
+}
+bool isVariable(const MyString & cadena) {
+	return isStringVariable(cadena) || isIntVariable(cadena) || isRealVariable(cadena);
+}
+
+//bool isCommentStatement(const vector<MyString> & statement) {
+//	if (isKeyWord(statement[0])) {
+//
+//
+//	}
+//	else if ((isIntVariable(statement[0])) ||
+//		(isRealVariable(statement[0])) ||
+//		(isStringVariable(statement[0]))) {
+//		if (statement[1] != '=') {
+//			cout << "error" << endl;
+//		}
+//		else {
+//
+//		}
+//
+//
+//	}
+//	return true;
+//}
+
 vector<MyString> tokenizer(const MyString & statement)
 {
 	vector<MyString> tokens;
@@ -251,141 +333,47 @@ vector<MyString> tokenizer(const MyString & statement)
 	return tokens;
 }
 
-//bool isAssigmentStatement(const vector<MyString> & statement){
-//	if (isIntVariable(statement[0]) ||
-//		isRealVariable(statement[0]) ||
-//		isStringtVariable(statement[0])) {
-//		if (statement[1] != '=')
+
+
+
+//bool isRelationalexpression(const vector<MyString> & statement) {
+//	bool twoParts = false;
+//	MyString op;
+//	vector<MyString>::const_iterator it = statement.begin();
+//	int i = 0;
+//	for (it; it != statement.end(); ++it, i++) {
+//		if (statement[i] == ".lt." || statement[i].toLower() == ".le." || statement[i].toLower() == ".gt." || statement[i].toLower() == ".ge.") {
+//			break;
+//		}
+//	}
+//
+//	if (it != statement.end()) {
+//		op = it->toLower();
+//		/*if (isStringVariable(*(it - 1)) || isString(*(it - 1)) || isStringVariable(*(it + 1)) || isString(*(it + 1)))
+//		{
+//			if (!((isStringVariable(*(it - 1)) || isString(*(it - 1))) && (isStringVariable(*(it + 1)) || isString(*(it + 1))))) {
+//				cout << "logical opertator: " << *it << " wrong operand data type" << endl;
+//				return false;
+//			}
+//
+//		}*/
+//		vector<MyString> exp(statement.begin(), it);
+//		vector<MyString> factor(it + 1, statement.end());
+//		if (exp.size() == 0 || factor.size() == 0) {
+//
+//			cout << "expected an expression" << endl;
 //			return false;
+//		}
+//		return isRelationalexpression(exp) && isExpression(factor);
 //	}
-//	else
-//		return false;
-//	if (isIntVariable(statement[0])) {
-//
+//	else {
+//		return isExpression(statement,start,end);
 //	}
-//	else if (isRealVariable(statement[0])) {
-//
-//	}
-//	else if (isStringtVariable(statement[0])) {
-//
-//	}
-//
-//	return isArithmeticExpression(statement);
-//
+//	return true;
 //}
 
-bool isRelationalexpression(const vector<MyString> & statement) {
-	bool twoParts = false;
-	MyString op;
-	vector<MyString>::const_iterator it = statement.begin();
-	int i = 0;
-	for (it; it != statement.end(); ++it, i++) {
-		if (statement[i] == ".lt." || statement[i].toLower() == ".le." || statement[i].toLower() == ".gt." || statement[i].toLower() == ".ge.") {
-			break;
-		}
-	}
 
-	if (it != statement.end()) {
-		op = it->toLower();
-		if (isStringVariable(*(it - 1)) || isString(*(it - 1)) || isStringVariable(*(it + 1)) || isString(*(it + 1)))
-		{
-			if (!((isStringVariable(*(it - 1)) || isString(*(it - 1))) && (isStringVariable(*(it + 1)) || isString(*(it + 1))))) {
-				cout << "logical opertator: " << *it << " wrong operand data type" << endl;
-				return false;
-			}
 
-		}
-		vector<MyString> exp(statement.begin(), it);
-		vector<MyString> factor(it + 1, statement.end());
-		if (exp.size() == 0 || factor.size() == 0) {
-
-			cout << "expected an expression" << endl;
-			return false;
-		}
-		return isRelationalexpression(exp) && isExpression(factor);
-	}
-	else {
-		return isExpression(statement);
-	}
-	return true;
-}
-
-bool isExpression(const vector<MyString> & statement) {
-	bool twoParts = false;
-	MyString op;
-	vector<MyString>::const_iterator it = statement.begin();
-	int i = 0;
-	for (it; it != statement.end(); ++it, i++) {
-		if (statement[i] == ".add." || statement[i].toLower() == ".sub.") {
-			break;
-		}
-	}
-
-	if (it != statement.end()) {
-		op = it->toLower();
-		vector<MyString> exp(statement.begin(), it);
-		vector<MyString> factor(it + 1, statement.end());
-		if (exp.size() == 0 || factor.size() == 0) {
-
-			cout << "expected an expression" << endl;
-			return false;
-		}
-		return isExpression(exp) && isFactor(factor);
-	}
-	else {
-		return isFactor(statement);
-	}
-	return true;
-}
-
-bool isFactor(const vector<MyString> & statement) {
-	MyString op;
-	int i = 0;
-	vector<MyString>::const_iterator it = statement.begin();
-	for (it; it != statement.end(); ++it, i++) {
-		if (statement[i] == ".mul." || statement[i].toLower() == ".div.") {
-			break;
-		}
-	}
-	if (it != statement.end()) {
-		op = it->toLower();
-		if (isStringVariable(*(it + 1)) || isStringVariable(*(it - 1)) || isString(*(it + 1)) || isString(*(it - 1))) {
-			cout << "opertator: " << *it << " wrong operand data type" << endl;
-			return false;
-		}
-		vector<MyString> factor(statement.begin(), it);
-		vector<MyString> term(it + 1, statement.end());
-		if (factor.size() == 0 || term.size() == 0) {
-			cout << "missing operation" << endl;
-			return false;
-		}
-
-		return isFactor(factor) && isTerm(term);
-	}
-	else {
-		return isTerm(statement);
-	}
-}
-
-bool isTerm(const vector<MyString> & statement) {
-	if (statement.size() > 1) {
-		if (isArithmeticOperator(statement[1])) {
-			return isExpression(statement);
-		}
-		else {
-			cout << "expected an expressio" << endl;
-			return false;
-		}
-	}
-
-	else {
-		return isRealwExp(statement[0]) ||
-			isIntVariable(statement[0]) ||
-			isRealVariable(statement[0]) ||
-			isStringVariable(statement[0]) ||
-			isString(statement[0]);
-	}
-}
 bool validation(const vector<MyString> & statement) {
 	int i = 0;
 	vector<MyString>::const_iterator it = statement.begin();
@@ -405,88 +393,10 @@ bool validation(const vector<MyString> & statement) {
 			(isStringVariable(*it)) ||
 			(isString(*it))
 			)) {
-			cout << "ERROR\nunkown identifier: " << *it<<endl;
+			cout << "ERROR\nunkown identifier: " << *it << endl;
 			return false;
-		}			
+		}
 	}
 	return true;
 }
-
-//void validation() {
-//	char string[40];
-//	int conitnuar = 0;
-//
-//	while (conitnuar != 1) {
-//		cout << "word: ";
-//		cin >> string;
-//		if (isKeyWord(string)) {
-//			cout << "valid" << endl;
-//			cout << "keyword" << endl << endl;
-//		}
-//		else if (isLogicalOperator(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "logical operator" << endl << endl;
-//		}
-//		else if (isRelationalOperator(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "relational operator" << endl << endl;
-//		}
-//		else if (isArithmeticOperator(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "arithmetic operator" << endl << endl;
-//		}
-//		else if (isVariable(string))
-//		{
-//			cout << "valid" << endl;
-//			if ((string[0] >= 'A' && string[0] <= 'F') || (string[0] >= 'a' && string[0] <= 'f'))
-//				cout << "integer ";
-//			else if ((string[0] >= 'G' && string[0] <= 'N') || (string[0] >= 'g' && string[0] <= 'n'))
-//				cout << "real ";
-//			else if ((string[0] >= 'O' && string[0] <= 'Z') || (string[0] >= 'o' && string[0] <= 'z'))
-//				cout << "string ";
-//			cout << "variable" << endl;
-//			cout << endl;
-//		}
-//		else if (isAssignment(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "assingment operator" << endl << endl;
-//		}
-//		else if (isUnsignedInteger(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "unsigned integer" << endl << endl;
-//		}
-//		else if (isInteger(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "integer" << endl << endl;
-//		}
-//		else if (isReal(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "real number" << endl << endl;
-//		}
-//
-//		else if (isRealwExp(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "real number with exponent" << endl << endl;
-//		}
-//		else if (isString(string))
-//		{
-//			cout << "valid" << endl;
-//			cout << "string" << endl << endl;
-//		}
-//
-//		else
-//			cout << "not valid" << endl << endl;
-//		cout << "1 to exist else to continue: ";
-//		cin >> conitnuar;
-//	}
-//
-//}
 

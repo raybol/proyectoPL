@@ -145,8 +145,10 @@
     <ClCompile Include="LexicalAnalizerFunctions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyString.cpp" />
+    <ClCompile Include="Parser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="LexicalAnalizerFunctions.h" />
     <ClInclude Include="MyString.h" />
   </ItemGroup>
