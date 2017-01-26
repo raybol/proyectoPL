@@ -182,10 +182,13 @@ bool isArithmeticOperator(const MyString & cadena) {
 
 bool isIntVariable(const MyString & cadena)
 {
-	bool valid = true;
-	for (int i = 0; cadena[i] != '\0' && valid; i++)
+	
+	bool valid = false;
+	if (((cadena[0] >= 'A' && cadena[0] <= 'F') || (cadena[0] >= 'a' && cadena[0] <= 'f')))
+		valid = true;
+	for (int i = 1; cadena[i] != '\0' && valid; i++)
 	{
-		if (!((cadena[i] >= 'A' && cadena[i] <= 'F') || (cadena[i] >= 'a' && cadena[i] <= 'f')))
+		if (((cadena[i] <'A' || cadena[i] > 'Z') && (cadena[i] < 'a' || cadena[i]> 'z')))
 			valid = false;
 	}
 	return valid;
@@ -193,21 +196,29 @@ bool isIntVariable(const MyString & cadena)
 
 bool isRealVariable(const MyString & cadena)
 {
-	bool valid = true;
-	for (int i = 0; cadena[i] != '\0' && valid; i++)
+
+	bool valid = false;
+	if (((cadena[0] >= 'G' && cadena[0] <= 'N') || (cadena[0] >= 'g' && cadena[0] <= 'n')))
+		valid = true;
+	if (cadena.len() > 1) {
+	for (int i = 1; cadena[i] != '\0' && valid; i++)
 	{
-		if (!((cadena[0] >= 'G' && cadena[0] <= 'N') || (cadena[0] >= 'g' && cadena[0] <= 'n')))
+		if (((cadena[i] <'A' || cadena[i] > 'Z') && (cadena[i] < 'a' || cadena[i]> 'z')))
 			valid = false;
 	}
+	}
+
 	return valid;
 }
 
 bool isStringVariable(const MyString & cadena)
 {
-	bool valid = true;
-	for (int i = 0; cadena[i] != '\0' && valid; i++)
+	bool valid = false;
+	if (((cadena[0] >= 'O' && cadena[0] <= 'Z') || (cadena[0] >= 'o' && cadena[0] <= 'z')))
+		valid = true;
+	for (int i = 1; cadena[i] != '\0' && valid; i++)
 	{
-		if (!((cadena[0] >= 'O' && cadena[0] <= 'Z') || (cadena[0] >= 'o' && cadena[0] <= 'z')))
+		if (((cadena[i] <'A' || cadena[i] > 'Z') && (cadena[i] < 'a' || cadena[i]> 'z')))
 			valid = false;
 	}
 	return valid;

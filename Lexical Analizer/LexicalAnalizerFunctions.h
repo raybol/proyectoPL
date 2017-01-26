@@ -9,7 +9,6 @@ bool isInteger(const MyString & cadena);
 bool isReal(const MyString & cadena);
 bool isRealwExp(const MyString & cadena);
 bool isKeyWord(const MyString & cadena);
-bool isAssignment(const MyString & cadena);
 bool isOperator(const MyString & cadena);
 bool isRelationalOperator(const MyString & cadena);
 bool isLogicalOperator(const MyString & cadena);
