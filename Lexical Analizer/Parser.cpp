@@ -12,7 +12,7 @@ bool parse(const vector<MyString> & statement, int start, int end) {
 	return isExpression(statement, start, end);
 }
 
-bool isCommentStatement(const vector<MyString> & statement,int start,int end) {
+bool isCommentStatement(const vector<MyString> & statement, int start, int end) {
 	if (statement[start].toLower() == "rem")
 		return true;
 	return false;
@@ -22,10 +22,10 @@ bool isAssigmentStatement(const vector<MyString> & statement, int start, int end
 	if (!(isVariable(statement[start]))) {
 		return false;
 	}
-	if (statement[start+1] != "=") {
+	if (statement[start + 1] != "=") {
 		return false;
 	}
-	return isExpression(statement,  start+2,  end);
+	return isArExpression(statement, start + 2, end);
 }
 
 bool isPrintStatement(const vector<MyString> & statement, int start, int end) {
@@ -65,7 +65,7 @@ bool isIfStatement(const vector<MyString> & statement, int start, int end) {
 		}
 	}
 	if (!hasThen) {
-		printStatement(statement,i);
+		printStatement(statement, i);
 		cout << "missing then part" << endl;
 		return false;
 	}
@@ -88,7 +88,7 @@ bool isIfStatement(const vector<MyString> & statement, int start, int end) {
 		}
 	}
 
-	return false; 
+	return false;
 }
 
 bool isEndStatement(const vector<MyString> & statement, int start, int end) {
@@ -97,6 +97,8 @@ bool isEndStatement(const vector<MyString> & statement, int start, int end) {
 			return true;
 		}
 	}
+	printStatement(statement, start);
+	cout << "additional expressions after end. keyword" << endl;
 	return false;
 }
 
@@ -110,7 +112,7 @@ bool isConditionalExpression(const vector<MyString> & statement, int start, int 
 	for (int i = start; i <= end && !hasOp; i++) {
 		if (isRelationalOperator(statement[i]) || isLogicalOperator(statement[i])) {
 			hasOp = true;
-		}			
+		}
 	}
 
 	if (!hasOp) {
@@ -128,7 +130,7 @@ bool isLogicalExpression(const vector<MyString> & statement, int start, int end)
 	int i = start;
 	//for (it; it != statement.end(); ++it, i++) 
 	for (i; i < end; i++) {
-		if (statement[i] == ".and." || statement[i] == ".or.") {
+		if (statement[i].toLower() == ".and." || statement[i].toLower() == ".or.") {
 			hasOP = true;
 			break;
 		}
@@ -150,7 +152,7 @@ bool isNeg(const vector<MyString> & statement, int start, int end) {
 	int i = start;
 	//for (it; it != statement.end(); ++it, i++) 
 	for (i; i < end; i++) {
-		if (statement[i] == ".not.") {
+		if (statement[i].toLower() == ".not.") {
 			hasOP = true;
 			break;
 		}
@@ -172,7 +174,7 @@ bool isEQExpression(const vector<MyString> & statement, int start, int end) {
 	int i = start;
 
 	for (i; i < end; i++) {
-		if (statement[i] == ".eq." || statement[i] == ".ne.") {
+		if (statement[i].toLower() == ".eq." || statement[i].toLower() == ".ne.") {
 			hasOP = true;
 			break;
 		}
@@ -191,7 +193,6 @@ bool isRelationalexpression(const vector<MyString> & statement, int start, int e
 
 	bool hasOP = false;
 	int i = start;
-	//for (it; it != statement.end(); ++it, i++) 
 	for (i; i < end; i++) {
 		if (statement[i] == ".lt." || statement[i].toLower() == ".le." || statement[i].toLower() == ".gt." || statement[i].toLower() == ".ge.") {
 			hasOP = true;
@@ -200,20 +201,17 @@ bool isRelationalexpression(const vector<MyString> & statement, int start, int e
 	}
 
 	if (hasOP) {
-
 		if (isStringVariable((statement[i + 1])) || isStringVariable((statement[i - 1])) || isString((statement[i + 1])) || isString((statement[i - 1]))) {
-			printStatement(statement, i);
-			cout << "opertator: " << statement[i] << " wrong operand data type" << endl;
-			return false;
-		}
-		/*if (isStringVariable(*(it - 1)) || isString(*(it - 1)) || isStringVariable(*(it + 1)) || isString(*(it + 1)))
-		{
-			if (!((isStringVariable(*(it - 1)) || isString(*(it - 1))) && (isStringVariable(*(it + 1)) || isString(*(it + 1))))) {
-				cout << "logical opertator: " << *it << " wrong operand data type" << endl;
+			if (
+				!((isStringVariable((statement[i - 1])) || isString((statement[i - 1]))) && (!(isStringVariable((statement[i + 1]))) || (!isString((statement[i + 1])))))
+				)
+				 {
+				printStatement(statement, i);
+				cout << "opertator: " << statement[i] << " wrong operand data type" << endl;
 				return false;
 			}
 
-		}*/
+		}
 		return isRelationalexpression(statement, start, i - 1) && isExpression(statement, i + 1, end);
 	}
 	else {
@@ -252,42 +250,6 @@ bool isExpression(const vector<MyString> & statement, int start, int end) {
 	//return true;
 }
 
-bool isLogicFactor(const vector<MyString> & statement, int start, int end) {
-
-	bool hasOP = false;
-	int i = start;
-	for (i; i < end; i++) {
-		if (statement[i].toLower() == ".mul." || statement[i].toLower() == ".div.") {
-			hasOP = true;
-			break;
-		}
-	}
-
-	if (hasOP) {
-
-		if (isStringVariable((statement[i + 1])) || isStringVariable((statement[i - 1])) || isString((statement[i + 1])) || isString((statement[i - 1]))) {
-			printStatement(statement, i);
-			cout << "opertator: " << statement[i] << " wrong operand data type" << endl;
-			return false;
-		}
-
-		/*if (i == start || i == end) {
-			cout << "missing operation" << endl;
-			return false;
-		}*/
-
-		return isLogicFactor(statement, start, i - 1) && isLogicTerm(statement, i + 1, end);
-	}
-	else {
-		/*	if (isOperator(statement[i + 1])) {
-		cout << "error 2ops de corrido" << endl;
-		return false;
-		}
-		else*/
-		return isLogicTerm(statement, start, end);
-	}
-	//return true;
-}
 bool isFactor(const vector<MyString> & statement, int start, int end) {
 
 	bool hasOP = false;
@@ -325,13 +287,12 @@ bool isFactor(const vector<MyString> & statement, int start, int end) {
 	//return true;
 }
 
-
-bool isLogicTerm(const vector<MyString> & statement, int start, int end) {
+bool isTerm(const vector<MyString> & statement, int start, int end) {
 	/*if (isOperator(statement[start]) || isOperator(statement[end]))
 	return false;*/
 	if (start < end) {
 		if (isArithmeticOperator(statement[start + 1]) || isRelationalOperator(statement[start + 1]) ||
-			statement[start + 1] == ".or." || statement[start + 1] == ".and."
+			statement[start + 1].toLower() == ".or." || statement[start + 1].toLower() == ".and."
 			) {
 			return isLogicalExpression(statement, start, end);
 		}
@@ -358,14 +319,82 @@ bool isLogicTerm(const vector<MyString> & statement, int start, int end) {
 	}
 }
 
-bool isTerm(const vector<MyString> & statement, int start, int end) {
+
+bool isArExpression(const vector<MyString> & statement, int start, int end) {
+
+	int i = start;
+	bool hasOP = false;
+	for (i; i < end; i++) {
+		if (statement[i].toLower() == ".add." || statement[i].toLower() == ".sub.") {
+			hasOP = true;
+			break;
+		}
+	}
+
+	if (hasOP) {
+		if (i == start || i == end) {
+			cout << "expected an expression un +/- de mas" << endl;
+			return false;
+		}
+		return isArExpression(statement, start, i - 1) && isArFactor(statement, i + 1, end);
+	}
+	else {
+		/*	if (isOperator(statement[i])) {
+		cout << "error 2ops de corrido" << endl;
+		return false;
+		}
+
+		else*/
+		return isArFactor(statement, start, end);
+	}
+	//return true;
+}
+
+bool isArFactor(const vector<MyString> & statement, int start, int end) {
+
+	bool hasOP = false;
+	int i = start;
+	for (i; i < end; i++) {
+		if (statement[i].toLower() == ".mul." || statement[i].toLower() == ".div.") {
+			hasOP = true;
+			break;
+		}
+	}
+
+	if (hasOP) {
+
+		if (isStringVariable((statement[i + 1])) || isStringVariable((statement[i - 1])) || isString((statement[i + 1])) || isString((statement[i - 1]))) {
+			printStatement(statement, i);
+			cout << "opertator: " << statement[i] << " wrong operand data type" << endl;
+			return false;
+		}
+
+		/*if (i == start || i == end) {
+			cout << "missing operation" << endl;
+			return false;
+		}*/
+
+		return isArFactor(statement, start, i - 1) && isArTerm(statement, i + 1, end);
+	}
+	else {
+		/*	if (isOperator(statement[i + 1])) {
+		cout << "error 2ops de corrido" << endl;
+		return false;
+		}
+		else*/
+		return isArTerm(statement, start, end);
+	}
+	//return true;
+}
+
+bool isArTerm(const vector<MyString> & statement, int start, int end) {
 	/*if (isOperator(statement[start]) || isOperator(statement[end]))
 		return false;*/
 	if (start < end) {
 		if (isArithmeticOperator(statement[start + 1]) || isRelationalOperator(statement[start + 1]) ||
-			statement[start + 1] == ".or." || statement[start + 1] == ".and."
+			statement[start + 1].toLower() == ".or." || statement[start + 1].toLower() == ".and."
 			) {
-			return isExpression(statement, start, end);
+			return isArExpression(statement, start, end);
 		}
 		else {
 			printStatement(statement, end);
